@@ -49,7 +49,17 @@ enum CalculatorButton: String{
     }
 }
 
+class GolbalEnviroment: ObservableObject{
+    @Published var display = ""
+    
+    func receiveInput(calculatorButton: CalculatorButton){
+        self.display = calculatorButton.title
+    }
+}
+
 struct ContentView: View {
+    
+    @EnvironmentObject var env: GolbalEnviroment
     
     let buttons: [[CalculatorButton]] = [
         [.ac, .plusMius, .percent, .divide],
@@ -65,7 +75,7 @@ struct ContentView: View {
             VStack{
                 HStack{
                     Spacer()
-                    Text("42").font(.system(size: 64))
+                    Text(env.display).font(.system(size: 64))
                         .foregroundColor(.white)
                 }.padding()
                 
@@ -73,33 +83,44 @@ struct ContentView: View {
                     HStack(spacing: 12){
                         ForEach(row, id: \.self) { button in
                             
-                            Button(action: {
-                                
-                            }){
-                                Text(button.title).font(.system(size: 32))
-                                    .frame(width: self.buttonWidth(button: button), height:
-                                            (UIScreen.main.bounds.width - 5 * 12) / 4)
-                                    .foregroundColor(.white)
-                                    .background(button.backgroundColor)
-                                    .cornerRadius(40)
-                            }
+                            CalculatorButtonView(button: button)
                         }
                     }
                 }
             }.padding(.bottom)
         }
     }
+}
+
+struct CalculatorButtonView: View {
+    var button: CalculatorButton
     
-    func buttonWidth(button: CalculatorButton)->CGFloat{
+    @EnvironmentObject var env: GolbalEnviroment
+
+    var body: some View {
+        Button(action: {
+            self.env.receiveInput(calculatorButton: self.button)
+        }){
+            Text(button.title).font(.system(size: 32))
+                .frame(width: self.buttonWidth(button: button), height:
+                        (UIScreen.main.bounds.width - 5 * 12) / 4)
+                .foregroundColor(.white)
+                .background(button.backgroundColor)
+                .cornerRadius(self.buttonWidth(button: button))
+        }
+    }
+    
+    private func buttonWidth(button: CalculatorButton)->CGFloat{
         if button == .zero{
             return (UIScreen.main.bounds.width - 5 * 12) / 2
         }
         return (UIScreen.main.bounds.width - 5 * 12) / 4
     }
+
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView().environmentObject(GolbalEnviroment())
     }
 }
