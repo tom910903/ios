@@ -11,7 +11,7 @@ enum CalculatorButton: String{
     case zero, one, two, three, four, five, six, seven, eight, nine
     case equal, plus, minus, multiply, divide
     case dot
-    case ac, plusMius,percent
+    case ac, plusMius, percent
     
     var title: String{
         switch self {
@@ -50,10 +50,36 @@ enum CalculatorButton: String{
 }
 
 class GolbalEnviroment: ObservableObject{
-    @Published var display = ""
+    @Published var value = "0"
+    var operation = ""
+    var currentValue = 0
     
     func receiveInput(calculatorButton: CalculatorButton){
-        self.display = calculatorButton.title
+        switch(calculatorButton){
+        case .ac:
+            initValue()
+            case .equal:break
+            case .plus:break
+            case .minus:break
+            case .multiply:break
+            case .divide:break
+            case .plusMius:break
+            case .percent:break
+            case .dot:break
+        default:
+            if self.value == "0" {
+                value = calculatorButton.title
+            }
+            else {
+                self.value += calculatorButton.title
+            }
+        }
+    }
+    
+    func initValue(){
+        value = "0"
+        operation = ""
+        currentValue = 0
     }
 }
 
@@ -75,7 +101,7 @@ struct ContentView: View {
             VStack{
                 HStack{
                     Spacer()
-                    Text(env.display).font(.system(size: 64))
+                    Text(env.value).font(.system(size: 64))
                         .foregroundColor(.white)
                 }.padding()
                 
