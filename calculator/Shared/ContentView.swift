@@ -52,20 +52,22 @@ enum CalculatorButton: String{
 class GolbalEnviroment: ObservableObject{
     @Published var value = "0"
     var operation = ""
-    var currentValue = 0
+    var prevValue = 0
     
     func receiveInput(calculatorButton: CalculatorButton){
         switch(calculatorButton){
         case .ac:
             initValue()
-            case .equal:break
-            case .plus:break
-            case .minus:break
-            case .multiply:break
-            case .divide:break
-            case .plusMius:break
-            case .percent:break
-            case .dot:break
+        case .equal:
+            value = calc()
+            break
+        case .plus, .minus, .multiply, .divide:
+            prevValue = Int(value)!
+            operation = calculatorButton.title
+            break
+        case .plusMius:break
+        case .percent:break
+        case .dot:break
         default:
             if self.value == "0" {
                 value = calculatorButton.title
@@ -79,7 +81,22 @@ class GolbalEnviroment: ObservableObject{
     func initValue(){
         value = "0"
         operation = ""
-        currentValue = 0
+        prevValue = 0
+    }
+    
+    func calc() -> String{
+        switch(operation){
+        case "+":
+            return String(prevValue + Int(value)!)
+        case "-":
+            return String(prevValue - Int(value)!)
+        case "*":
+            return String(prevValue * Int(value)!)
+        case "/":
+            return String(prevValue / Int(value)!)
+        default:
+            return value
+        }
     }
 }
 
