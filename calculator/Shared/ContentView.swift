@@ -66,7 +66,9 @@ class GolbalEnviroment: ObservableObject{
             operation = calculatorButton.title
             break
         case .plusMius:break
-        case .percent:break
+        case .percent:
+            value = String(0.01 * Double(value)!)
+            break
         case .dot:break
         default:
             if self.value == "0" {
