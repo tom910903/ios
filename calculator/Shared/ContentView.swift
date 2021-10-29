@@ -52,7 +52,8 @@ enum CalculatorButton: String{
 class GolbalEnviroment: ObservableObject{
     @Published var value = "0"
     var operation = ""
-    var prevValue = 0
+    var prevValue = 0.0
+    var checkOperation = false
     
     func receiveInput(calculatorButton: CalculatorButton){
         switch(calculatorButton){
@@ -62,21 +63,31 @@ class GolbalEnviroment: ObservableObject{
             value = calc()
             break
         case .plus, .minus, .multiply, .divide:
-            prevValue = Int(value)!
+            prevValue = Double(value)!
             operation = calculatorButton.title
+            self.checkOperation = true
             break
         case .plusMius:break
         case .percent:
             value = String(0.01 * Double(value)!)
             break
-        case .dot:break
+        case .dot:
+            if !value.contains("."){
+                value += "."
+            }
+            break
         default:
             if self.value == "0" {
                 value = calculatorButton.title
             }
+            else if self.checkOperation == true && Double(value) == prevValue{
+                value = calculatorButton.title
+                self.checkOperation = false
+            }
             else {
                 self.value += calculatorButton.title
             }
+            break
         }
     }
     
@@ -89,13 +100,13 @@ class GolbalEnviroment: ObservableObject{
     func calc() -> String{
         switch(operation){
         case "+":
-            return String(prevValue + Int(value)!)
+            return String(prevValue + Double(value)!)
         case "-":
-            return String(prevValue - Int(value)!)
-        case "*":
-            return String(prevValue * Int(value)!)
+            return String(prevValue - Double(value)!)
+        case "X":
+            return String(prevValue * Double(value)!)
         case "/":
-            return String(prevValue / Int(value)!)
+            return String(prevValue / Double(value)!)
         default:
             return value
         }
