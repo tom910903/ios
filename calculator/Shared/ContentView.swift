@@ -131,8 +131,9 @@ struct ContentView: View {
             VStack{
                 HStack{
                     Spacer()
-                    Text(env.value).font(.system(size: 64))
+                    Text(env.value).font(.system(size: CGFloat(getFontSize(count: env.value.count))))
                         .foregroundColor(.white)
+                        
                 }.padding()
                 
                 ForEach(buttons, id: \.self) { row in
@@ -145,6 +146,14 @@ struct ContentView: View {
                 }
             }.padding(.bottom)
         }
+    }
+    
+    func getFontSize(count: Int)->Int{
+        
+        if count < 7 { return 64 }
+        else if count < 9 { return 54 }
+        else if count < 11 { return 44 }
+        else { return 34 }
     }
 }
 
