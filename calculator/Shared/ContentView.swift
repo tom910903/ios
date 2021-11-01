@@ -49,6 +49,38 @@ enum CalculatorButton: String{
     }
 }
 
+var keys:[[Key]] = [
+    [
+        Key(label: "AC", color: Color.gray, labelColor: Color.black),
+        Key(label: "+/-", color: Color.gray, labelColor: Color.black, type: KeyType.Operator),
+        Key(label: "%", color: Color.gray, labelColor: Color.black, type: KeyType.Operator),
+        Key(label: "/", color: Color.orange, labelColor: Color.white, type: KeyType.Operator)
+    ],
+    [
+        Key(label: "7"),
+        Key(label: "8"),
+        Key(label: "9"),
+        Key(label: "*", color: Color.orange, labelColor: Color.white, type: KeyType.Operator)
+    ],
+    [
+        Key(label: "4"),
+        Key(label: "5"),
+        Key(label: "6"),
+        Key(label: "-", color: Color.orange, labelColor: Color.white, type: KeyType.Operator)
+    ],
+    [
+        Key(label: "1"),
+        Key(label: "2"),
+        Key(label: "3"),
+        Key(label: "+", color: Color.orange, labelColor: Color.white, type: KeyType.Operator)
+    ],
+    [
+    Key(label: "0"),
+        Key(label: "."),
+        Key(label: "=", color: Color.orange, labelColor: Color.white, type: KeyType.Operator)
+    ]
+]
+
 class GolbalEnviroment: ObservableObject{
     @Published var value = "0"
     var operation = ""
@@ -114,46 +146,15 @@ class GolbalEnviroment: ObservableObject{
 }
 
 struct ContentView: View {
-    
-    @EnvironmentObject var env: GolbalEnviroment
-    
-    let buttons: [[CalculatorButton]] = [
-        [.ac, .plusMius, .percent, .divide],
-        [.seven, .eight, .nine, .multiply],
-        [.four, .five, .six, .minus],
-        [.one, .two, .three, .plus],
-        [.zero, .dot, .equal],
-    ]
-    
+    @State var value = "0"
     var body: some View {
         ZStack(alignment: .bottom){
             Color.black.edgesIgnoringSafeArea(.all)
             VStack{
-                HStack{
-                    Spacer()
-                    Text(env.value).font(.system(size: CGFloat(getFontSize(count: env.value.count))))
-                        .foregroundColor(.white)
-                        
-                }.padding()
-                
-                ForEach(buttons, id: \.self) { row in
-                    HStack(spacing: 12){
-                        ForEach(row, id: \.self) { button in
-                            
-                            CalculatorButtonView(button: button)
-                        }
-                    }
-                }
-            }.padding(.bottom)
+                ResultView(value: value)
+                KeyPadView(value: self.$value)
+            }
         }
-    }
-    
-    func getFontSize(count: Int)->Int{
-        
-        if count < 7 { return 64 }
-        else if count < 9 { return 54 }
-        else if count < 11 { return 44 }
-        else { return 34 }
     }
 }
 
@@ -161,7 +162,7 @@ struct CalculatorButtonView: View {
     var button: CalculatorButton
     
     @EnvironmentObject var env: GolbalEnviroment
-
+    
     var body: some View {
         Button(action: {
             self.env.receiveInput(calculatorButton: self.button)
@@ -181,11 +182,11 @@ struct CalculatorButtonView: View {
         }
         return (UIScreen.main.bounds.width - 5 * 12) / 4
     }
-
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(GolbalEnviroment())
+        ContentView()
     }
 }
