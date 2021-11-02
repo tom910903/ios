@@ -9,14 +9,14 @@ import SwiftUI
 
 struct KeyView:View{
     var key:Key
-    @Binding var value:String
+    @EnvironmentObject var calculatorVM:CalcuatorVM
     
     var body: some View{
         let width = key.label == "0" ? UIScreen.main.bounds.width / 2 : UIScreen.main.bounds.width / 4
         let height = UIScreen.main.bounds.width / 4
         
         return Button(action: {
-            self.value = self.value == "0" ? self.key.label : self.value + self.key.label
+            self.calculatorVM.handleKeyPress(key: self.key)
         })
         {
             RoundedRectangle(cornerRadius: 200)

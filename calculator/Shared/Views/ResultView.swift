@@ -7,16 +7,16 @@
 import SwiftUI
 
 struct ResultView:View{
-    var value : String
+    @EnvironmentObject var calculatorVM:CalcuatorVM
     
     var body:some View{
         VStack{
             Spacer()
             HStack{
                 Spacer()
-                Text(self.value)
+                Text(calculatorVM.result)
                     .foregroundColor(.white)
-                    .font(.system(size: 90))
+                    .font(.system(size: CGFloat(calculatorVM.fontSize)))
                     .padding(.trailing, 30)
             }
         }
