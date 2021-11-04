@@ -18,7 +18,7 @@ var operatorSymbols:[String:String] = [
     "-":"minus",
     "*":"multiply",
     "/":"divide",
-    "+/-":"plus.minus",
+    "+/-":"plus.forwardslash.minus",
     "%":"percent",
     "=":"equal",
 ]
